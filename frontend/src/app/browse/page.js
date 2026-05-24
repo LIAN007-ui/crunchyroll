@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import ContentGrid from '@/components/ContentGrid';
 import './browse.css';
+import { useLanguage } from '@/context/LanguageContext';
 
 const GENRES = [
   'Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror',
@@ -20,9 +21,12 @@ function BrowseContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const { t } = useLanguage();
+
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
+  const [error, setError] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const type = searchParams.get('type') || '';
@@ -39,6 +43,7 @@ function BrowseContent() {
 
   async function loadContent() {
     setLoading(true);
+    setError('');
     try {
       const params = { page, limit: 20, sort };
       if (type) params.type = type;
@@ -49,9 +54,14 @@ function BrowseContent() {
 
       const data = await api.getContent(params);
       setContent(data.content || []);
-      setPagination(data.pagination || {});
+      if (data.pagination) {
+        setPagination(data.pagination || {});
+      } else {
+        setPagination({ page, totalPages: 1, total: (data.content || []).length });
+      }
     } catch (err) {
       console.error('Browse error:', err);
+      setError(err.message || 'Error loading content');
     } finally {
       setLoading(false);
     }
@@ -183,15 +193,22 @@ function BrowseContent() {
 
           {pagination.total !== undefined && (
             <div className="browse-results-count">
-              {pagination.total} result{pagination.total !== 1 ? 's' : ''} found
+              {pagination.total} {t('browse.resultsFound')}
             </div>
           )}
 
-          <ContentGrid
-            items={content}
-            loading={loading}
-            emptyMessage="No content matches your filters. Try adjusting your search."
-          />
+          {error ? (
+            <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-secondary)' }}>
+              <p>{`Error: ${error}`}</p>
+              <button className="btn btn-primary" onClick={loadContent} style={{ marginTop: 12 }}>Retry</button>
+            </div>
+          ) : (
+            <ContentGrid
+              items={content}
+              loading={loading}
+              emptyMessage={t('browse.noResults')}
+            />
+          )}
 
           {pagination.totalPages > 1 && (
             <div className="browse-pagination">
