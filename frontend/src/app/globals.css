@@ -34,8 +34,8 @@
 
   /* Text Colors */
   --text-primary: #f0f0f5;
-  --text-secondary: #8888a0;
-  --text-tertiary: #55556a;
+  --text-secondary: #cfcfe6;
+  --text-tertiary: #9a9ab0;
   --text-accent: #a78bfa;
   --text-on-accent: #ffffff;
 
@@ -278,9 +278,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 600; }
 }
 
 .badge-genre {
-  background: rgba(124, 58, 237, 0.15);
-  color: var(--accent-primary-light);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: rgba(124, 58, 237, 0.12);
+  color: #efe8ff;
+  border: 1px solid rgba(124, 58, 237, 0.22);
 }
 
 .badge-status {

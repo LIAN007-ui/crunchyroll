@@ -198,6 +198,8 @@ export default function ReadPage() {
           <img
             src={pages[currentPage]}
             alt={`Page ${currentPage + 1}`}
+            loading="lazy"
+            decoding="async"
           />
           <div
             className="reader-paged-nav next"
