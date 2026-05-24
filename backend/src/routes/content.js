@@ -5,6 +5,15 @@ const { optionalAuth } = require('../middleware/auth');
 const router = express.Router();
 const prisma = new PrismaClient();
 
+function safeParse(str, fallback) {
+  try {
+    if (typeof str === 'string') return JSON.parse(str);
+    return fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
 // GET /api/content — List all content with filters
 router.get('/', optionalAuth, async (req, res) => {
   try {
@@ -53,9 +62,9 @@ router.get('/', optionalAuth, async (req, res) => {
     // Parse genres from JSON string
     const parsed = content.map(c => ({
       ...c,
-      genres: JSON.parse(c.genres),
-      episodeCount: c._count.episodes,
-      chapterCount: c._count.mangaChapters,
+      genres: safeParse(c.genres, []),
+      episodeCount: c._count?.episodes || 0,
+      chapterCount: c._count?.mangaChapters || 0,
       _count: undefined
     }));
 
@@ -83,7 +92,7 @@ router.get('/featured', async (req, res) => {
       take: 5
     });
 
-    res.json({ featured: featured.map(c => ({ ...c, genres: JSON.parse(c.genres) })) });
+    res.json({ featured: featured.map(c => ({ ...c, genres: safeParse(c.genres, []) })) });
   } catch (err) {
     console.error('Featured error:', err);
     res.status(500).json({ error: 'Internal server error.' });
@@ -122,12 +131,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
     const parsed = {
       ...content,
-      genres: JSON.parse(content.genres),
+      genres: safeParse(content.genres, []),
       mangaChapters: content.mangaChapters.map(ch => ({
         ...ch,
-        pages: JSON.parse(ch.pages)
+        pages: safeParse(ch.pages, [])
       })),
-      bookmarkCount: content._count.watchlist,
+      bookmarkCount: content._count?.watchlist || 0,
       inWatchlist,
       userProgress,
       _count: undefined
