@@ -45,6 +45,27 @@ async function fetchFromProxyJikanById(id) {
   if (!res.ok) throw new Error('Proxy Jikan fetch failed');
   const json = await res.json();
   const item = json.data;
+  // Try to fetch episodes via proxy
+  let episodes = [];
+  try {
+    const epRes = await fetch(new URL(`/api/proxy/jikan/anime/${mal}/episodes`, typeof window !== 'undefined' ? window.location.origin : '').toString());
+    if (epRes.ok) {
+      const epJson = await epRes.json();
+      const epItems = epJson.data || [];
+      episodes = epItems.map(ep => ({
+        id: `ep-${ep.mal_id || ep.mal_id}-${ep.mal_id ? ep.mal_id : ''}`,
+        seasonNumber: ep.season ?? 1,
+        episodeNumber: ep.mal_id || ep.episode ?? 0,
+        title: ep.title || ep.title_japanese || `Episode ${ep.episode}`,
+        thumbnailUrl: ep.images?.jpg?.image_url || '',
+        duration: ep.duration ? parseInt(ep.duration) : 0,
+        mal_id: ep.mal_id || null
+      }));
+    }
+  } catch (e) {
+    // ignore
+  }
+
   return { content: {
     id: `anime-${item.mal_id}`,
     type: 'ANIME',
@@ -59,7 +80,7 @@ async function fetchFromProxyJikanById(id) {
     genres: (item.genres || []).map(g => g.name),
     inWatchlist: false,
     bookmarkCount: 0,
-    episodes: []
+    episodes
   } };
 }
 
@@ -101,6 +122,27 @@ async function fetchFromJikanById(id) {
   const res = await fetch(`${JIKAN_BASE}/anime/${mal}`);
   if (!res.ok) throw new Error('Jikan fetch failed');
   const { data: item } = await res.json();
+  // Fetch episodes from Jikan
+  let episodes = [];
+  try {
+    const epRes = await fetch(`${JIKAN_BASE}/anime/${mal}/episodes`);
+    if (epRes.ok) {
+      const epJson = await epRes.json();
+      const epItems = epJson.data || [];
+      episodes = epItems.map(ep => ({
+        id: `ep-${ep.mal_id || ep.mal_id}-${ep.mal_id ? ep.mal_id : ''}`,
+        seasonNumber: ep.season ?? 1,
+        episodeNumber: ep.mal_id || ep.episode ?? 0,
+        title: ep.title || ep.title_japanese || `Episode ${ep.episode}`,
+        thumbnailUrl: ep.images?.jpg?.image_url || '',
+        duration: ep.duration ? parseInt(ep.duration) : 0,
+        mal_id: ep.mal_id || null
+      }));
+    }
+  } catch (e) {
+    // ignore
+  }
+
   return { content: {
     id: `anime-${item.mal_id}`,
     type: 'ANIME',
@@ -115,7 +157,7 @@ async function fetchFromJikanById(id) {
     genres: (item.genres || []).map(g => g.name),
     inWatchlist: false,
     bookmarkCount: 0,
-    episodes: []
+    episodes
   } };
 }
 
