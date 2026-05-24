@@ -82,15 +82,19 @@ export default function Navbar() {
             <Link href="/manga" className={pathname.includes('/manga') ? 'active' : ''}>{t('nav.manga')}</Link>
           </div>
 
-          <form className="navbar-search" onSubmit={handleSearch}>
-            <span className="search-icon">🔍</span>
+          <form className="navbar-search" onSubmit={handleSearch} role="search">
+            <label htmlFor="nav-search" className="sr-only">Search</label>
             <input
               type="text"
               placeholder={t('nav.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               id="nav-search"
+              aria-label={t('nav.searchPlaceholder')}
             />
+            <button type="submit" className="search-btn" aria-label="Search">
+              🔍
+            </button>
           </form>
 
           <div className="navbar-actions" ref={menuRef}>
@@ -169,14 +173,17 @@ export default function Navbar() {
           </Link>
         </div>
 
-          <form className="mobile-search" onSubmit={handleSearch}>
-          <span className="search-icon">🔍</span>
+          <form className="mobile-search" onSubmit={handleSearch} role="search">
+          <label htmlFor="mobile-search" className="sr-only">Search</label>
           <input
+            id="mobile-search"
             type="text"
             placeholder={t('nav.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label={t('nav.searchPlaceholder')}
           />
+          <button type="submit" className="search-btn" aria-label="Search">🔍</button>
         </form>
 
           <nav className="mobile-nav-links">

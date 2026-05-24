@@ -37,10 +37,54 @@ const mockApi = {
   },
 
   async getContent(params = {}) {
-    const { type, limit = 15 } = params;
+    const {
+      type,
+      limit = 15,
+      page = 1,
+      search = '',
+      genre,
+      year,
+      status,
+      sort
+    } = params;
+
     let list = sampleItems.slice();
     if (type) list = list.filter(i => i.type === type);
-    return { content: list.slice(0, limit) };
+    if (genre) list = list.filter(i => (i.genres || []).map(g => g.toLowerCase()).includes(String(genre).toLowerCase()));
+    if (year) list = list.filter(i => String(i.year) === String(year));
+    if (status) list = list.filter(i => String(i.status).toLowerCase() === String(status).toLowerCase());
+
+    if (search && search.trim()) {
+      const q = String(search).toLowerCase();
+      list = list.filter(i => (
+        (i.title || '').toLowerCase().includes(q) ||
+        (i.description || '').toLowerCase().includes(q) ||
+        (i.genres || []).join(' ').toLowerCase().includes(q)
+      ));
+    }
+
+    // simple sort
+    if (sort === 'rating') {
+      list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sort === 'newest') {
+      list.sort((a, b) => (b.year || 0) - (a.year || 0));
+    }
+
+    const total = list.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const currentPage = Math.max(1, Math.min(page, totalPages));
+    const start = (currentPage - 1) * limit;
+    const paged = list.slice(start, start + limit);
+
+    return {
+      content: paged,
+      pagination: {
+        total,
+        page: currentPage,
+        totalPages,
+        limit
+      }
+    };
   },
 
   async getContentById(id) {
