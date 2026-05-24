@@ -55,7 +55,7 @@ async function fetchFromProxyJikanById(id) {
       episodes = epItems.map(ep => ({
         id: `ep-${ep.mal_id || ep.mal_id}-${ep.mal_id ? ep.mal_id : ''}`,
         seasonNumber: ep.season ?? 1,
-        episodeNumber: ep.mal_id || ep.episode ?? 0,
+        episodeNumber: (ep.mal_id || ep.episode) ?? 0,
         title: ep.title || ep.title_japanese || `Episode ${ep.episode}`,
         thumbnailUrl: ep.images?.jpg?.image_url || '',
         duration: ep.duration ? parseInt(ep.duration) : 0,
@@ -132,7 +132,7 @@ async function fetchFromJikanById(id) {
       episodes = epItems.map(ep => ({
         id: `ep-${ep.mal_id || ep.mal_id}-${ep.mal_id ? ep.mal_id : ''}`,
         seasonNumber: ep.season ?? 1,
-        episodeNumber: ep.mal_id || ep.episode ?? 0,
+        episodeNumber: (ep.mal_id || ep.episode) ?? 0,
         title: ep.title || ep.title_japanese || `Episode ${ep.episode}`,
         thumbnailUrl: ep.images?.jpg?.image_url || '',
         duration: ep.duration ? parseInt(ep.duration) : 0,
