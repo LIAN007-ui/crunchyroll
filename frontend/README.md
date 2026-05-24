@@ -40,3 +40,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 If the backend API is not running or unreachable, the frontend now falls back to a local mock dataset so the UI remains interactive for demos and development. No additional configuration is required — the app will automatically use mock data when requests fail.
 
 To force-connect to a backend, set `NEXT_PUBLIC_API_URL` in your environment to your API endpoint.
+
+Proxy & real API integration
+ - To use real data from Jikan/MangaDex without CORS issues, start the backend so the frontend can call the proxy at `/api/proxy/*`.
+ - Set `NEXT_PUBLIC_USE_PROXY=true` in your frontend environment (or in `.env.local`) to prefer the backend proxy for external data.
+ - Example `.env.local` in `frontend/`:
+	 ```env
+	 NEXT_PUBLIC_API_URL=http://localhost:4000/api
+	 NEXT_PUBLIC_USE_PROXY=true
+	 ```
+
+When the proxy is enabled the frontend will request external data through your backend (safer, avoids CORS and rate-limit headers). If the backend or proxy are unavailable, the app falls back to local mock data.
