@@ -14,10 +14,26 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
+// CORS configuration: allow a list from env or fallback to localhost
+const allowedFromEnv = process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || '';
+const allowed = allowedFromEnv.split(',').map(s => s.trim()).filter(Boolean);
+const defaultAllowed = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL 
-    ? [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://127.0.0.1:3000'] 
-    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: function(origin, callback) {
+    // allow non-browser or server-to-server requests (no origin)
+    if (!origin) return callback(null, true);
+
+    // if ALLOWED_ORIGINS/FRONTEND_URL provided, use that allowlist
+    if (allowed.length) {
+      if (allowed.includes(origin)) return callback(null, true);
+      return callback(new Error('CORS not allowed for origin ' + origin), false);
+    }
+
+    // otherwise allow localhost dev origins only
+    if (defaultAllowed.includes(origin)) return callback(null, true);
+    return callback(new Error('CORS not allowed for origin ' + origin), false);
+  },
   credentials: true
 }));
 app.use(express.json());
