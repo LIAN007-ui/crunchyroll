@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import ContentCard, { ContentCardSkeleton } from './ContentCard';
 import './Carousel.css';
@@ -10,12 +10,40 @@ export default function Carousel({ items = [], title, emoji, viewAllHref, loadin
 
   const scroll = (direction) => {
     if (!trackRef.current) return;
-    const scrollAmount = trackRef.current.clientWidth * 0.8;
-    trackRef.current.scrollBy({
-      left: direction === 'next' ? scrollAmount : -scrollAmount,
+    const track = trackRef.current;
+    const children = track.children;
+    let step = track.clientWidth * 0.8;
+    if (children && children.length > 0) {
+      if (children.length > 1) {
+        // distance between first two children (accounts for gap)
+        step = Math.abs(children[1].offsetLeft - children[0].offsetLeft);
+      } else {
+        step = children[0].clientWidth;
+      }
+    }
+
+    track.scrollBy({
+      left: direction === 'next' ? step : -step,
       behavior: 'smooth'
     });
   };
+
+  // keyboard support: allow left/right arrows when track is focused
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        scroll('next');
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        scroll('prev');
+      }
+    };
+    track.addEventListener('keydown', onKey);
+    return () => track.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <section className="carousel-section">
@@ -35,7 +63,7 @@ export default function Carousel({ items = [], title, emoji, viewAllHref, loadin
           ←
         </button>
 
-        <div className="carousel-track" ref={trackRef}>
+        <div className="carousel-track" ref={trackRef} tabIndex={0} aria-label={`${title} carousel`}>
           {loading ? (
             Array.from({ length: 8 }).map((_, i) => (
               <ContentCardSkeleton key={i} />

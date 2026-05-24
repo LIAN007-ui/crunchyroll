@@ -109,17 +109,19 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <div
+                <button
                   className="navbar-avatar"
                   onClick={() => setMenuOpen(!menuOpen)}
                   id="user-avatar"
+                  aria-haspopup="menu"
+                  aria-expanded={menuOpen}
                 >
                   {user.profilePic ? (
                     <Image src={user.profilePic} alt={user.username} width={36} height={36} style={{ borderRadius: '50%' }} />
                   ) : (
-                    user.username[0].toUpperCase()
+                    <span aria-hidden="true">{user.username[0].toUpperCase()}</span>
                   )}
-                </div>
+                </button>
                 {menuOpen && (
                   <div className="navbar-user-menu">
                     <div style={{ padding: '8px 14px', color: 'var(--text-primary)', fontWeight: 600 }}>
@@ -162,7 +164,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile overlay */}
-      <div className={`mobile-overlay ${mobileOpen ? 'visible' : ''}`} onClick={() => setMobileOpen(false)} />
+      <button className={`mobile-overlay ${mobileOpen ? 'visible' : ''}`} onClick={() => setMobileOpen(false)} aria-label="Close mobile menu" />
 
       {/* Mobile slide-in panel */}
       <div className={`mobile-panel ${mobileOpen ? 'open' : ''}`}>

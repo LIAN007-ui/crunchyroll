@@ -197,25 +197,81 @@ class ApiClient {
 
   // Auth
   async register(username, email, password) {
-    const data = await this.request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ username, email, password }),
-    });
-    this.setToken(data.token);
-    return data;
+    try {
+      const data = await this.request('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password }),
+      });
+      this.setToken(data.token);
+      return data;
+    } catch (err) {
+      // Fallback: simulated local registration (for demo/offline)
+      if (typeof window === 'undefined') throw err;
+      const usersKey = 'omnistream_users';
+      const raw = localStorage.getItem(usersKey);
+      const users = raw ? JSON.parse(raw) : [];
+      if (users.find(u => u.email === email)) {
+        throw new Error('Email already registered (local)');
+      }
+      const user = {
+        id: `local-${Date.now()}`,
+        username,
+        email,
+        profilePic: null,
+        createdAt: new Date().toISOString(),
+      };
+      users.push({ ...user, password });
+      localStorage.setItem(usersKey, JSON.stringify(users));
+      const token = `local:${email}`;
+      this.setToken(token);
+      return { user, token };
+    }
   }
 
   async login(email, password) {
-    const data = await this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
-    this.setToken(data.token);
-    return data;
+    try {
+      const data = await this.request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      this.setToken(data.token);
+      return data;
+    } catch (err) {
+      // Fallback: simulated local login
+      if (typeof window === 'undefined') throw err;
+      const usersKey = 'omnistream_users';
+      const raw = localStorage.getItem(usersKey);
+      const users = raw ? JSON.parse(raw) : [];
+      const found = users.find(u => u.email === email && u.password === password);
+      if (!found) throw new Error('Invalid credentials (local)');
+      const { password: _p, ...user } = found;
+      const token = `local:${email}`;
+      this.setToken(token);
+      return { user, token };
+    }
   }
 
   async getProfile() {
-    return this.request('/auth/me');
+    try {
+      return await this.request('/auth/me');
+    } catch (err) {
+      // Fallback: resolve profile from local token
+      if (typeof window === 'undefined') throw err;
+      const token = this.getToken();
+      if (!token || !token.startsWith('local:')) throw err;
+      const email = token.replace('local:', '');
+      const usersKey = 'omnistream_users';
+      const raw = localStorage.getItem(usersKey);
+      const users = raw ? JSON.parse(raw) : [];
+      const found = users.find(u => u.email === email);
+      if (!found) {
+        // token invalid for local store
+        this.removeToken();
+        throw new Error('Local profile not found');
+      }
+      const { password: _p, ...user } = found;
+      return { user };
+    }
   }
 
   async updateProfile(data) {
