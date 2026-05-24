@@ -313,7 +313,15 @@ class ApiClient {
     try {
       return await this.request('/content/featured');
     } catch (err) {
-      return mockApi.getFeatured();
+      // Try external provider as fallback (prefer proxy)
+      try {
+        if (USE_PROXY) {
+          return await fetchFromProxyJikan({ sort: 'rating', limit: 6 });
+        }
+        return await fetchFromJikan({ sort: 'rating', limit: 6 });
+      } catch (e) {
+        return mockApi.getFeatured();
+      }
     }
   }
 
