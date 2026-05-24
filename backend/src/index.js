@@ -8,6 +8,7 @@ const contentRoutes = require('./routes/content');
 const watchlistRoutes = require('./routes/watchlist');
 const progressRoutes = require('./routes/progress');
 const recommendationsRoutes = require('./routes/recommendations');
+const proxyRoutes = require('./routes/proxy');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -28,6 +29,7 @@ app.use('/api/content', contentRoutes);
 app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/recommendations', recommendationsRoutes);
+app.use('/api/proxy', proxyRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

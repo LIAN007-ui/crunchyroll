@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import ContentCard, { ContentCardSkeleton } from './ContentCard';
 import './ContentGrid.css';
 
@@ -10,7 +11,7 @@ export default function ContentGrid({ items = [], title, viewAllHref, loading, e
         <div className="content-grid-header">
           <h2>{title}</h2>
           {viewAllHref && (
-            <a href={viewAllHref} className="view-all">View All →</a>
+            <Link href={viewAllHref} className="view-all">View All →</Link>
           )}
         </div>
       )}

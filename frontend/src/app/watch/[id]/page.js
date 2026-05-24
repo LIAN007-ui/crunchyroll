@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import './watch.css';
@@ -283,7 +284,9 @@ export default function WatchPage() {
                 className={`watch-ep-card ${ep.id === parseInt(id) ? 'active' : ''}`}
               >
                 <div className="watch-ep-thumb">
-                  <img src={ep.thumbnailUrl || content?.coverUrl} alt={ep.title} />
+                    {ep.thumbnailUrl || content?.coverUrl ? (
+                      <Image src={ep.thumbnailUrl || content?.coverUrl} alt={ep.title} fill style={{ objectFit: 'cover' }} />
+                    ) : null}
                 </div>
                 <div className="watch-ep-info">
                   <div className="ep-num">S{ep.seasonNumber} E{ep.episodeNumber}</div>

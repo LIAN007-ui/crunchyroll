@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import './HeroBanner.css';
 
 export default function HeroBanner({ items = [] }) {
@@ -23,12 +24,18 @@ export default function HeroBanner({ items = [] }) {
     <div className="hero-banner" id="hero-banner">
       {items.map((item, i) => (
         <div key={item.id} className={`hero-slide ${i === current ? 'active' : ''}`}>
-          <img
-            src={item.bannerUrl || item.coverUrl}
-            alt={item.title}
-            className="hero-slide-bg"
-          />
-          <div className="hero-slide-overlay" />
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            {item.bannerUrl || item.coverUrl ? (
+              <Image
+                src={item.bannerUrl || item.coverUrl}
+                alt={item.title}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority={i === 0}
+              />
+            ) : null}
+            <div className="hero-slide-overlay" />
+          </div>
         </div>
       ))}
 

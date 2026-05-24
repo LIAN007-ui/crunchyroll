@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
@@ -80,7 +81,7 @@ export default function ProfilePage() {
       <div className="profile-header">
         <div className="profile-avatar">
           {user.profilePic ? (
-            <img src={user.profilePic} alt={user.username} />
+              <Image src={user.profilePic} alt={user.username} width={44} height={44} style={{ borderRadius: '50%' }} />
           ) : (
             user.username[0].toUpperCase()
           )}

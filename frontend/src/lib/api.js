@@ -1,6 +1,91 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
 import mockApi from './mockApi';
+// External public APIs fallbacks
+const JIKAN_BASE = 'https://api.jikan.moe/v4';
+const MANGADEX_BASE = 'https://api.mangadex.org';
+
+async function fetchFromJikan(params = {}) {
+  // Basic mapping for list endpoints
+  const url = new URL(`${JIKAN_BASE}/anime`);
+  if (params.search) url.searchParams.set('q', params.search);
+  if (params.sort === 'rating') url.searchParams.set('order_by', 'score');
+  if (params.sort === 'newest') url.searchParams.set('order_by', 'aired');
+  url.searchParams.set('limit', params.limit || 12);
+
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error('Jikan fetch failed');
+  const data = await res.json();
+  const content = (data.data || []).map(item => ({
+    id: `anime-${item.mal_id}`,
+    type: 'ANIME',
+    title: item.title,
+    coverUrl: item.images?.jpg?.large_image_url || item.images?.webp?.large_image_url || '',
+    bannerUrl: item.trailer?.images?.medium || '',
+    description: item.synopsis || '',
+    rating: item.score || 0,
+    year: item.aired?.prop?.from?.year || null,
+    episodeCount: item.episodes || 0,
+    status: item.status ? item.status.toUpperCase() : 'UNKNOWN',
+    genres: (item.genres || []).slice(0, 3).map(g => g.name),
+    inWatchlist: false,
+    bookmarkCount: 0,
+    episodes: []
+  }));
+  return { content };
+}
+
+async function fetchFromJikanById(id) {
+  // Accept numeric id or 'anime-<num>'
+  let mal = id;
+  if (typeof id === 'string' && id.startsWith('anime-')) mal = id.split('-')[1];
+  if (!mal) throw new Error('Invalid anime id');
+  const res = await fetch(`${JIKAN_BASE}/anime/${mal}`);
+  if (!res.ok) throw new Error('Jikan fetch failed');
+  const { data: item } = await res.json();
+  return { content: {
+    id: `anime-${item.mal_id}`,
+    type: 'ANIME',
+    title: item.title,
+    coverUrl: item.images?.jpg?.large_image_url || '',
+    bannerUrl: item.trailer?.images?.medium || '',
+    description: item.synopsis || '',
+    rating: item.score || 0,
+    year: item.aired?.prop?.from?.year || null,
+    episodeCount: item.episodes || 0,
+    status: item.status ? item.status.toUpperCase() : 'UNKNOWN',
+    genres: (item.genres || []).map(g => g.name),
+    inWatchlist: false,
+    bookmarkCount: 0,
+    episodes: []
+  } };
+}
+
+async function fetchFromMangaDex(params = {}) {
+  // Simple search: map to our shape minimally
+  const url = new URL(`${MANGADEX_BASE}/manga`);
+  if (params.search) url.searchParams.set('title', params.search);
+  url.searchParams.set('limit', params.limit || 12);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error('MangaDex fetch failed');
+  const data = await res.json();
+  const content = (data.data || []).map(entry => ({
+    id: `manga-${entry.id}`,
+    type: 'MANGA',
+    title: entry.attributes?.title?.en || Object.values(entry.attributes?.title || {})[0] || 'Manga',
+    coverUrl: `/images/sample-1.svg`,
+    bannerUrl: `/images/sample-banner-1.svg`,
+    description: entry.attributes?.description?.en || '',
+    rating: 0,
+    year: entry.attributes?.year || null,
+    chapterCount: 0,
+    status: (entry.attributes?.status || 'UNKNOWN').toUpperCase(),
+    genres: [],
+    inWatchlist: false,
+    bookmarkCount: 0
+  }));
+  return { content };
+}
 
 class ApiClient {
   constructor() {
@@ -89,7 +174,19 @@ class ApiClient {
   // Content
   async getContent(params = {}) {
     const query = new URLSearchParams(params).toString();
-    return this.request(`/content?${query}`);
+    try {
+      return await this.request(`/content?${query}`);
+    } catch (err) {
+      // Try external providers depending on type
+      try {
+        if (params.type === 'ANIME') return await fetchFromJikan(params);
+        if (params.type === 'MANGA') return await fetchFromMangaDex(params);
+        // Generic: try Jikan first
+        return await fetchFromJikan(params);
+      } catch (e) {
+        return mockApi.getContent(params);
+      }
+    }
   }
 
   async getFeatured() {
@@ -104,6 +201,35 @@ class ApiClient {
     try {
       return await this.request(`/content/${id}`);
     } catch (err) {
+      // Try external providers
+      try {
+        if (typeof id === 'string' && id.startsWith('anime-')) return await fetchFromJikanById(id);
+        // MangaDex by id
+        if (typeof id === 'string' && id.startsWith('manga-')) {
+          const mdId = id.split('-')[1];
+          const res = await fetch(`${MANGADEX_BASE}/manga/${mdId}`);
+          if (res.ok) {
+            const json = await res.json();
+            return { content: {
+              id: `manga-${json.data.id}`,
+              type: 'MANGA',
+              title: json.data.attributes?.title?.en || Object.values(json.data.attributes?.title || {})[0] || 'Manga',
+              coverUrl: `/images/sample-1.svg`,
+              bannerUrl: `/images/sample-banner-1.svg`,
+              description: json.data.attributes?.description?.en || '',
+              rating: 0,
+              year: json.data.attributes?.year || null,
+              chapterCount: 0,
+              status: (json.data.attributes?.status || 'UNKNOWN').toUpperCase(),
+              genres: [],
+              inWatchlist: false,
+              bookmarkCount: 0
+            } };
+          }
+        }
+      } catch (e) {
+        // fall through to mock
+      }
       return mockApi.getContentById(id);
     }
   }

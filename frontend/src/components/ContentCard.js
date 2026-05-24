@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import './ContentCard.css';
 
 export default function ContentCard({ content, index = 0 }) {
@@ -19,12 +20,19 @@ export default function ContentCard({ content, index = 0 }) {
       id={`content-card-${content.id}`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      <div className="content-card-image">
-        <img
-          src={content.coverUrl}
-          alt={content.title}
-          loading="lazy"
-        />
+      <div className="content-card-image" style={{ position: 'relative' }}>
+        {content.coverUrl ? (
+          <Image
+            src={content.coverUrl}
+            alt={content.title}
+            fill
+            sizes="(max-width: 600px) 180px, 220px"
+            style={{ objectFit: 'cover', borderRadius: '8px' }}
+          />
+        ) : (
+          <div className="image-fallback" aria-hidden="true" />
+        )}
+
         <div className="content-card-overlay">
           <div className="play-btn">▶</div>
         </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
@@ -73,14 +74,22 @@ export default function MangaDetailPage() {
   return (
     <div className="detail-page page-enter">
       <div className="detail-hero">
-        <img src={content.bannerUrl || content.coverUrl} alt={content.title} className="detail-hero-bg" />
-        <div className="detail-hero-overlay" />
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          {content.bannerUrl || content.coverUrl ? (
+            <Image src={content.bannerUrl || content.coverUrl} alt={content.title} fill className="detail-hero-bg" style={{ objectFit: 'cover' }} />
+          ) : null}
+          <div className="detail-hero-overlay" />
+        </div>
       </div>
 
       <div className="detail-content">
         <div className="detail-top">
           <div className="detail-cover">
-            <img src={content.coverUrl} alt={content.title} />
+            {content.coverUrl ? (
+              <div style={{ position: 'relative', width: 220, height: 320 }}>
+                <Image src={content.coverUrl} alt={content.title} fill style={{ objectFit: 'cover', borderRadius: '8px' }} />
+              </div>
+            ) : null}
           </div>
           <div className="detail-info">
             <h1>{content.title}</h1>

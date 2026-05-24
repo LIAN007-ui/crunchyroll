@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -110,7 +111,7 @@ export default function Navbar() {
                   id="user-avatar"
                 >
                   {user.profilePic ? (
-                    <img src={user.profilePic} alt={user.username} />
+                    <Image src={user.profilePic} alt={user.username} width={36} height={36} style={{ borderRadius: '50%' }} />
                   ) : (
                     user.username[0].toUpperCase()
                   )}
@@ -212,7 +213,7 @@ export default function Navbar() {
             <div className="mobile-user-info">
               <div className="navbar-avatar" style={{ width: 44, height: 44, fontSize: '1rem' }}>
                 {user.profilePic ? (
-                  <img src={user.profilePic} alt={user.username} />
+                  <Image src={user.profilePic} alt={user.username} width={44} height={44} style={{ borderRadius: '50%' }} />
                 ) : (
                   user.username[0].toUpperCase()
                 )}
