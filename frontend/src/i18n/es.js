@@ -1,0 +1,183 @@
+const es = {
+  common: {
+    viewAll: 'Ver Todo →',
+    noContent: 'No se encontró contenido',
+    loading: 'Cargando...',
+    previous: 'Anterior',
+    next: 'Siguiente',
+    back: 'Atrás',
+    save: 'Guardar',
+    cancel: 'Cancelar',
+    saving: 'Guardando...',
+    anime: 'Anime',
+    manga: 'Manga',
+    rating: 'Calificación',
+    year: 'Año',
+    status: 'Estado',
+    episodes: 'Episodios',
+    chapters: 'Capítulos',
+    eps: 'eps',
+    chs: 'caps',
+    genre: 'Género'
+  },
+  nav: {
+    home: 'Inicio',
+    browse: 'Explorar',
+    anime: 'Anime',
+    manga: 'Manga',
+    searchPlaceholder: 'Buscar anime, manga...',
+    profile: 'Mi Perfil',
+    watchlist: 'Mi Watchlist',
+    signOut: 'Cerrar Sesión',
+    signIn: 'Iniciar Sesión',
+    signUp: 'Registrarse',
+    searchButton: 'Buscar...'
+  },
+  hero: {
+    featured: 'Destacado',
+    watchNow: 'Ver Ahora',
+    readNow: 'Leer Ahora',
+    moreInfo: 'Más Información',
+    estrenoSemana: 'Estreno de la Semana',
+    nuevoCapitulo: 'Nuevo Capítulo'
+  },
+  home: {
+    continueWatching: 'Continuar Viendo',
+    trending: 'Tendencias Ahora',
+    recommended: 'Recomendado para Ti',
+    latestAnime: 'Últimos Animes',
+    popularManga: 'Mangas Populares',
+    browseGenre: 'Explorar por Género'
+  },
+  footer: {
+    tagline: 'Tu destino definitivo para anime y manga. Descubre, transmite y lee miles de títulos con calidad premium.',
+    explore: 'Explorar',
+    genres: 'Géneros',
+    account: 'Cuenta',
+    topRated: 'Mejor Valorados',
+    newest: 'Más Recientes',
+    airing: 'En Emisión',
+    allRightsReserved: 'Todos los derechos reservados.',
+    terms: 'Términos de Servicio',
+    privacy: 'Política de Privacidad',
+    contact: 'Contacto'
+  },
+  browse: {
+    filters: 'Filtros',
+    closeFilters: 'Cerrar Filtros',
+    clearFilters: 'Limpiar filtros',
+    type: 'Tipo',
+    statusLabel: 'Estado',
+    sortLabel: 'Ordenar:',
+    resultsFound: 'resultado(s) encontrados',
+    noResults: 'No hay contenidos que coincidan con tus filtros...',
+    pageOf: 'Página {page} de {pages}',
+    sortOptions: {
+      rating: 'Mejor Calificados',
+      newest: 'Más Recientes',
+      title: 'A-Z',
+      year: 'Año'
+    },
+    statusOptions: {
+      airing: 'En Emisión',
+      completed: 'Completado',
+      upcoming: 'Próximamente'
+    }
+  },
+  detail: {
+    notFound: 'Contenido no encontrado',
+    notFoundDesc: 'El contenido que estás buscando no existe.',
+    browseCatalog: 'Explorar Catálogo',
+    watchEpisode: 'Ver Episodio 1',
+    readChapter: 'Leer Capítulo 1',
+    inWatchlist: 'En tu Watchlist',
+    addToWatchlist: 'Agregar a Watchlist',
+    pleaseSignIn: 'Por favor inicia sesión para agregar a tu watchlist',
+    removedFromWatchlist: 'Eliminado de la watchlist',
+    addedToWatchlist: '¡Agregado a la watchlist!',
+    episodes: 'Episodios',
+    seasons: 'Temporadas',
+    season: 'Temporada {num}',
+    bookmarks: 'Marcadores',
+    readChapterBtn: 'Leer →',
+    pages: 'páginas'
+  },
+  watch: {
+    notFound: 'Episodio no encontrado',
+    backToAnime: 'Volver a la Serie',
+    allEpisodes: 'Todos los Episodios',
+    prevEpisode: 'Episodio Anterior',
+    nextEpisode: 'Siguiente Episodio',
+    skipIntro: 'Omitir Intro (+85s)',
+    from: 'De',
+    menu: 'Menú Principal',
+    speed: 'Velocidad'
+  },
+  read: {
+    notFound: 'Capítulo no encontrado',
+    backToManga: 'Volver al Manga',
+    allChapters: 'Todos los Capítulos',
+    prevChapter: 'Capítulo Anterior',
+    nextChapter: 'Siguiente Capítulo',
+    modeScroll: 'Desplazamiento',
+    modePage: 'Paginado',
+    modeDouble: 'Doble Página',
+    dirLtr: 'Izquierda a Derecha',
+    dirRtl: 'Derecha a Izquierda',
+    zoom: 'Zoom'
+  },
+  profile: {
+    editProfile: 'Editar Perfil',
+    saveProfile: 'Guardar Perfil',
+    cancel: 'Cancelar',
+    logout: 'Cerrar Sesión',
+    logoutSuccess: 'Sesión cerrada',
+    watchlistTab: 'Mi Watchlist',
+    progressTab: 'Continuar Viendo/Leyendo',
+    stats: {
+      watchlist: 'En Watchlist',
+      progress: 'En Progreso',
+      anime: 'Anime',
+      manga: 'Manga'
+    },
+    emptyWatchlist: 'Tu watchlist está vacía. ¡Explora el catálogo para agregar títulos!',
+    emptyProgress: 'Aún no hay progreso. ¡Comienza a ver o leer algo!',
+    usernameMinLength: 'El nombre de usuario debe tener al menos 3 caracteres',
+    profileUpdated: 'Perfil actualizado ✅',
+    newUsernamePlaceholder: 'Nuevo nombre de usuario'
+  },
+  auth: {
+    signInTitle: 'Iniciar sesión para continuar viendo',
+    signUpTitle: 'Crea tu cuenta y comienza a transmitir',
+    email: 'Correo Electrónico',
+    password: 'Contraseña',
+    username: 'Nombre de Usuario',
+    signingIn: 'Iniciando sesión...',
+    signingUp: 'Creando cuenta...',
+    signInBtn: 'Iniciar Sesión',
+    signUpBtn: 'Crear Cuenta',
+    dontHaveAccount: '¿No tienes una cuenta?',
+    alreadyHaveAccount: '¿Ya tienes una cuenta?',
+    minPasswordLength: 'Mínimo 6 caracteres',
+    demoAccount: 'Cuenta de Demostración:',
+    fillDemo: 'Llenar Credenciales Demo',
+    welcomeBack: '¡Bienvenido de vuelta! 🎉',
+    welcomeSignUp: '¡Cuenta creada! ¡Bienvenido a OmniStream! 🎉'
+  },
+  emptyStates: {
+    watchlistTitle: 'Tu Watchlist está vacía',
+    watchlistDesc: 'Agrega tus series, películas y mangas favoritos para tenerlos siempre a mano.',
+    watchlistCta: 'Explorar Catálogo',
+    progressTitle: 'Sin progreso de lectura o reproducción',
+    progressDesc: 'Aquí verás los episodios y capítulos que dejes a medias para retomarlos al instante.',
+    progressCta: 'Comenzar a ver o leer',
+    searchTitle: 'No encontramos lo que buscas',
+    searchDesc: 'Prueba con otras palabras clave o explora las categorías del menú.',
+    searchCta: 'Ver todo el catálogo',
+    genericTitle: 'Nada por aquí',
+    genericDesc: 'Parece que no hay nada para mostrar en esta sección por ahora.',
+    genericCta: 'Volver al Inicio'
+  }
+};
+
+export default es;

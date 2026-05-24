@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import './Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { lang, setLang, t } = useLanguage();
   const pathname = usePathname();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -73,17 +75,17 @@ export default function Navbar() {
           </Link>
 
           <div className="navbar-nav">
-            <Link href="/" className={pathname === '/' ? 'active' : ''}>Home</Link>
-            <Link href="/browse" className={pathname === '/browse' ? 'active' : ''}>Browse</Link>
-            <Link href="/browse?type=ANIME" className={pathname.includes('anime') ? 'active' : ''}>Anime</Link>
-            <Link href="/browse?type=MANGA" className={pathname.includes('manga') ? 'active' : ''}>Manga</Link>
+            <Link href="/" className={pathname === '/' ? 'active' : ''}>{t('nav.home')}</Link>
+            <Link href="/browse" className={pathname === '/browse' ? 'active' : ''}>{t('nav.browse')}</Link>
+            <Link href="/browse?type=ANIME" className={pathname.includes('anime') ? 'active' : ''}>{t('nav.anime')}</Link>
+            <Link href="/browse?type=MANGA" className={pathname.includes('manga') ? 'active' : ''}>{t('nav.manga')}</Link>
           </div>
 
           <form className="navbar-search" onSubmit={handleSearch}>
             <span className="search-icon">🔍</span>
             <input
               type="text"
-              placeholder="Search anime, manga..."
+              placeholder={t('nav.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               id="nav-search"
@@ -91,6 +93,15 @@ export default function Navbar() {
           </form>
 
           <div className="navbar-actions" ref={menuRef}>
+            <button 
+              className="lang-toggle-btn navbar-desktop-only"
+              onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+              aria-label="Toggle language"
+              title={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+            >
+              🌐 {lang.toUpperCase()}
+            </button>
+
             {user ? (
               <>
                 <div
@@ -111,22 +122,22 @@ export default function Navbar() {
                     </div>
                     <div className="menu-divider" />
                     <Link href="/profile" onClick={() => setMenuOpen(false)}>
-                      👤 Profile
+                      👤 {t('nav.profile')}
                     </Link>
                     <Link href="/profile#watchlist" onClick={() => setMenuOpen(false)}>
-                      📋 My Watchlist
+                      📋 {t('nav.watchlist')}
                     </Link>
                     <div className="menu-divider" />
                     <button onClick={handleLogout}>
-                      🚪 Sign Out
+                      🚪 {t('nav.signOut')}
                     </button>
                   </div>
                 )}
               </>
             ) : (
               <>
-                <Link href="/login" className="btn btn-ghost navbar-desktop-only">Sign In</Link>
-                <Link href="/register" className="btn btn-primary navbar-desktop-only">Sign Up</Link>
+                <Link href="/login" className="btn btn-ghost navbar-desktop-only">{t('nav.signIn')}</Link>
+                <Link href="/register" className="btn btn-primary navbar-desktop-only">{t('nav.signUp')}</Link>
               </>
             )}
 
@@ -161,7 +172,7 @@ export default function Navbar() {
           <span className="search-icon">🔍</span>
           <input
             type="text"
-            placeholder="Search anime, manga..."
+            placeholder={t('nav.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -169,20 +180,32 @@ export default function Navbar() {
 
         <nav className="mobile-nav-links">
           <Link href="/" className={pathname === '/' ? 'active' : ''} onClick={() => setMobileOpen(false)}>
-            🏠 Home
+            🏠 {t('nav.home')}
           </Link>
           <Link href="/browse" className={pathname === '/browse' ? 'active' : ''} onClick={() => setMobileOpen(false)}>
-            🔍 Browse
+            🔍 {t('nav.browse')}
           </Link>
           <Link href="/browse?type=ANIME" onClick={() => setMobileOpen(false)}>
-            📺 Anime
+            📺 {t('nav.anime')}
           </Link>
           <Link href="/browse?type=MANGA" onClick={() => setMobileOpen(false)}>
-            📖 Manga
+            📖 {t('nav.manga')}
           </Link>
         </nav>
 
         <div className="mobile-divider" />
+
+        <div className="mobile-lang-section" style={{ padding: '0 24px 16px' }}>
+          <button 
+            className="lang-toggle-btn"
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+          >
+            🌐 {lang === 'es' ? 'Cambiar a Inglés' : 'Switch to Spanish'}
+          </button>
+        </div>
+
+        <div className="mobile-divider" style={{ marginTop: 0 }} />
 
         {user ? (
           <div className="mobile-user-section">
@@ -200,22 +223,22 @@ export default function Navbar() {
               </div>
             </div>
             <Link href="/profile" className="mobile-nav-link-btn" onClick={() => setMobileOpen(false)}>
-              👤 Mi Perfil
+              👤 {t('nav.profile')}
             </Link>
             <Link href="/profile#watchlist" className="mobile-nav-link-btn" onClick={() => setMobileOpen(false)}>
-              📋 Mi Watchlist
+              📋 {t('nav.watchlist')}
             </Link>
             <button className="mobile-nav-link-btn logout-btn" onClick={handleLogout}>
-              🚪 Cerrar Sesión
+              🚪 {t('nav.signOut')}
             </button>
           </div>
         ) : (
           <div className="mobile-auth-section">
             <Link href="/login" className="btn btn-secondary" style={{ width: '100%' }} onClick={() => setMobileOpen(false)}>
-              Sign In
+              {t('nav.signIn')}
             </Link>
             <Link href="/register" className="btn btn-primary" style={{ width: '100%' }} onClick={() => setMobileOpen(false)}>
-              Sign Up
+              {t('nav.signUp')}
             </Link>
           </div>
         )}

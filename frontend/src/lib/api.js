@@ -1,5 +1,7 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
+import mockApi from './mockApi';
+
 class ApiClient {
   constructor() {
     this.baseUrl = API_BASE;
@@ -91,24 +93,44 @@ class ApiClient {
   }
 
   async getFeatured() {
-    return this.request('/content/featured');
+    try {
+      return await this.request('/content/featured');
+    } catch (err) {
+      return mockApi.getFeatured();
+    }
   }
 
   async getContentById(id) {
-    return this.request(`/content/${id}`);
+    try {
+      return await this.request(`/content/${id}`);
+    } catch (err) {
+      return mockApi.getContentById(id);
+    }
   }
 
   async getEpisodes(contentId) {
-    return this.request(`/content/${contentId}/episodes`);
+    try {
+      return await this.request(`/content/${contentId}/episodes`);
+    } catch (err) {
+      return mockApi.getEpisodes(contentId);
+    }
   }
 
   async getChapters(contentId) {
-    return this.request(`/content/${contentId}/chapters`);
+    try {
+      return await this.request(`/content/${contentId}/chapters`);
+    } catch (err) {
+      return mockApi.getChapters(contentId);
+    }
   }
 
   // Watchlist
   async getWatchlist() {
-    return this.request('/watchlist');
+    try {
+      return await this.request('/watchlist');
+    } catch (err) {
+      return mockApi.getWatchlist();
+    }
   }
 
   async addToWatchlist(contentId) {
@@ -121,11 +143,19 @@ class ApiClient {
 
   // Progress
   async getProgress() {
-    return this.request('/progress');
+    try {
+      return await this.request('/progress');
+    } catch (err) {
+      return mockApi.getProgress();
+    }
   }
 
   async getContentProgress(contentId) {
-    return this.request(`/progress/${contentId}`);
+    try {
+      return await this.request(`/progress/${contentId}`);
+    } catch (err) {
+      return mockApi.getContentProgress(contentId);
+    }
   }
 
   async updateProgress(data) {
@@ -137,7 +167,11 @@ class ApiClient {
 
   // Recommendations
   async getRecommendations() {
-    return this.request('/recommendations');
+    try {
+      return await this.request('/recommendations');
+    } catch (err) {
+      return mockApi.getRecommendations();
+    }
   }
 }
 

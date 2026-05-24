@@ -400,6 +400,18 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 600; }
   font-size: 0.875rem;
 }
 
+/* Accessibility: visible focus for keyboard users */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent-primary-light);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+
 .toast.success { border-left: 3px solid var(--color-success); }
 .toast.error { border-left: 3px solid var(--color-error); }
 .toast.info { border-left: 3px solid var(--color-info); }
