@@ -187,6 +187,103 @@ async function fetchFromMangaDex(params = {}) {
   return { content };
 }
 
+async function fetchFromProxyMangaById(id) {
+  // id is expected to be numeric or 'manga-<uuid>'
+  let md = id;
+  if (typeof id === 'string' && id.startsWith('manga-')) md = id.split('-')[1];
+  if (!md) throw new Error('Invalid manga id');
+
+  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const url = new URL(`/api/proxy/mangadex/manga/${md}`, base).toString();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Proxy MangaDex fetch failed');
+  const json = await res.json();
+  const data = json.data;
+
+  // try to fetch chapters (feed)
+  let chapters = [];
+  try {
+    const feedUrl = new URL(`/api/proxy/mangadex/manga/${md}/feed`, base);
+    feedUrl.searchParams.set('translatedLanguage[]', 'en');
+    feedUrl.searchParams.set('limit', '500');
+    const feedRes = await fetch(feedUrl.toString());
+    if (feedRes.ok) {
+      const feedJson = await feedRes.json();
+      const entries = feedJson.data || [];
+      chapters = entries.map(e => ({
+        id: e.id,
+        chapterNumber: e.attributes?.chapter || null,
+        title: e.attributes?.title || null,
+        pageCount: e.attributes?.pages || 0
+      }));
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return { content: {
+    id: `manga-${data.id}`,
+    type: 'MANGA',
+    title: data.attributes?.title?.en || Object.values(data.attributes?.title || {})[0] || 'Manga',
+    coverUrl: `/images/sample-1.svg`,
+    bannerUrl: `/images/sample-banner-1.svg`,
+    description: data.attributes?.description?.en || '',
+    rating: 0,
+    year: data.attributes?.year || null,
+    chapterCount: chapters.length,
+    status: (data.attributes?.status || 'UNKNOWN').toUpperCase(),
+    genres: [],
+    inWatchlist: false,
+    bookmarkCount: 0,
+    mangaChapters: chapters
+  } };
+}
+
+async function fetchFromMangaDexById(id) {
+  let md = id;
+  if (typeof id === 'string' && id.startsWith('manga-')) md = id.split('-')[1];
+  if (!md) throw new Error('Invalid manga id');
+  const res = await fetch(`${MANGADEX_BASE}/manga/${md}`);
+  if (!res.ok) throw new Error('MangaDex fetch failed');
+  const json = await res.json();
+  const data = json.data;
+
+  // chapters feed
+  let chapters = [];
+  try {
+    const feedRes = await fetch(`${MANGADEX_BASE}/manga/${md}/feed?translatedLanguage[]=en&limit=500`);
+    if (feedRes.ok) {
+      const feedJson = await feedRes.json();
+      const entries = feedJson.data || [];
+      chapters = entries.map(e => ({
+        id: e.id,
+        chapterNumber: e.attributes?.chapter || null,
+        title: e.attributes?.title || null,
+        pageCount: e.attributes?.pages || 0
+      }));
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return { content: {
+    id: `manga-${data.id}`,
+    type: 'MANGA',
+    title: data.attributes?.title?.en || Object.values(data.attributes?.title || {})[0] || 'Manga',
+    coverUrl: `/images/sample-1.svg`,
+    bannerUrl: `/images/sample-banner-1.svg`,
+    description: data.attributes?.description?.en || '',
+    rating: 0,
+    year: data.attributes?.year || null,
+    chapterCount: chapters.length,
+    status: (data.attributes?.status || 'UNKNOWN').toUpperCase(),
+    genres: [],
+    inWatchlist: false,
+    bookmarkCount: 0,
+    mangaChapters: chapters
+  } };
+}
+
 class ApiClient {
   constructor() {
     this.baseUrl = API_BASE;
