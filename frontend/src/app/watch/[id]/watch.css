@@ -1,0 +1,289 @@
+.watch-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 72px);
+  background: #000;
+}
+
+/* Top navigation bar */
+.watch-top-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), transparent);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.watch-page:hover .watch-top-bar {
+  opacity: 1;
+}
+
+.back-home-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+}
+
+.back-home-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--accent-primary-light);
+}
+
+.back-anime-btn {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 0.813rem;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  transition: color var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.back-anime-btn:hover {
+  color: var(--accent-secondary);
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  max-height: 75vh;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container video {
+  width: 100%;
+  max-height: 75vh;
+  background: #000;
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.video-container:hover .video-controls {
+  opacity: 1;
+}
+
+.video-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  position: relative;
+}
+
+.video-progress-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-full);
+  transition: width 0.1s linear;
+}
+
+.video-progress:hover {
+  height: 6px;
+}
+
+.video-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.video-buttons-left,
+.video-buttons-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.video-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-size: 1.25rem;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  color: white;
+}
+
+.video-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.video-time {
+  font-size: 0.813rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Episode info below player */
+.watch-info {
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--bg-primary);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.watch-episode-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.watch-episode-title .ep-number {
+  color: var(--accent-primary-light);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.watch-episode-title h1 {
+  font-size: 1.5rem;
+}
+
+.watch-anime-link {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-lg);
+  display: block;
+}
+
+.watch-anime-link a {
+  color: var(--accent-primary-light);
+  transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+.watch-anime-link a:hover {
+  color: var(--accent-secondary);
+}
+
+/* Episode sidebar */
+.watch-episodes {
+  padding: var(--space-lg);
+  background: var(--bg-primary);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.watch-episodes h2 {
+  margin-bottom: var(--space-md);
+  font-size: 1.125rem;
+}
+
+.watch-episode-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-sm);
+}
+
+.watch-ep-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--duration-fast) var(--ease-smooth);
+  text-decoration: none;
+  color: inherit;
+}
+
+.watch-ep-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-glass);
+}
+
+.watch-ep-card.active {
+  border-color: var(--accent-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.watch-ep-thumb {
+  width: 100px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.watch-ep-thumb img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.watch-ep-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.watch-ep-info .ep-num {
+  font-size: 0.688rem;
+  color: var(--accent-primary-light);
+  font-weight: 600;
+}
+
+.watch-ep-info .ep-title {
+  font-size: 0.813rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.watch-ep-info .ep-dur {
+  font-size: 0.688rem;
+  color: var(--text-tertiary);
+}
+
+/* Navigation buttons */
+.watch-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--space-lg) var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .watch-episode-list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,313 @@
+.detail-page {
+  padding-bottom: var(--space-4xl);
+}
+
+/* Hero section */
+.detail-hero {
+  position: relative;
+  height: 50vh;
+  min-height: 350px;
+  max-height: 500px;
+  overflow: hidden;
+  margin-top: -72px;
+}
+
+.detail-hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(2px) brightness(0.5);
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg-primary) 0%, rgba(6, 6, 11, 0.6) 60%, rgba(6, 6, 11, 0.3) 100%);
+}
+
+/* Content section */
+.detail-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: -120px auto 0;
+  padding: 0 var(--space-lg);
+}
+
+.detail-top {
+  display: flex;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.detail-cover {
+  flex: 0 0 250px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--border-subtle);
+}
+
+.detail-cover img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-info h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--space-md);
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  align-items: center;
+}
+
+.detail-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-lg);
+}
+
+.detail-description {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.938rem;
+  margin-bottom: var(--space-lg);
+}
+
+.detail-actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.detail-stats {
+  display: flex;
+  gap: var(--space-xl);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.detail-stat {
+  text-align: center;
+}
+
+.detail-stat .stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary-light);
+}
+
+.detail-stat .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Episodes / Chapters list */
+.detail-section {
+  margin-top: var(--space-2xl);
+}
+
+.detail-section h2 {
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.season-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  overflow-x: auto;
+}
+
+.season-tab {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+}
+
+.season-tab:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.season-tab.active {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: white;
+}
+
+.episode-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.episode-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.episode-card:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateX(4px);
+}
+
+.episode-thumb {
+  flex: 0 0 160px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.episode-thumb img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.episode-thumb .play-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+.episode-card:hover .play-icon {
+  opacity: 1;
+}
+
+.episode-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.episode-number {
+  font-size: 0.75rem;
+  color: var(--accent-primary-light);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.episode-title {
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.episode-duration {
+  font-size: 0.813rem;
+  color: var(--text-tertiary);
+}
+
+/* Chapter card */
+.chapter-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.chapter-card:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateX(4px);
+}
+
+.chapter-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.chapter-num {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-primary-light);
+  min-width: 40px;
+}
+
+.chapter-title {
+  font-weight: 500;
+}
+
+.chapter-pages {
+  font-size: 0.813rem;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 768px) {
+  .detail-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .detail-cover {
+    flex: none;
+    width: 200px;
+  }
+
+  .detail-meta,
+  .detail-genres,
+  .detail-actions {
+    justify-content: center;
+  }
+
+  .detail-stats {
+    justify-content: center;
+  }
+
+  .episode-thumb {
+    flex: 0 0 100px;
+  }
+}

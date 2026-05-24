@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  email      String   @unique
+  password   String
+  profilePic String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  watchlist Watchlist[]
+  progress  UserProgress[]
+}
+
+model Content {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  type        String   // "ANIME" or "MANGA"
+  coverUrl    String
+  bannerUrl   String?
+  genres      String   // JSON array stored as string (SQLite limitation)
+  year        Int
+  status      String   // "Airing", "Completed", "Upcoming"
+  rating      Float    @default(0)
+  createdAt   DateTime @default(now())
+
+  episodes      Episode[]
+  mangaChapters MangaChapter[]
+  watchlist     Watchlist[]
+  progress      UserProgress[]
+}
+
+model Episode {
+  id            Int     @id @default(autoincrement())
+  contentId     Int
+  seasonNumber  Int
+  episodeNumber Int
+  title         String
+  videoUrl      String
+  thumbnailUrl  String?
+  duration      Int?
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+}
+
+model MangaChapter {
+  id              Int     @id @default(autoincrement())
+  contentId       Int
+  chapterNumber   Int
+  title           String?
+  pages           String  // JSON array of image URLs
+  pageCount       Int
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+}
+
+model Watchlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  contentId Int
+  addedAt   DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+}
+
+model UserProgress {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  contentId     Int
+  episodeId     Int?
+  chapterId     Int?
+  lastTimestamp  Int?
+  lastPage      Int?
+  updatedAt     DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+}
