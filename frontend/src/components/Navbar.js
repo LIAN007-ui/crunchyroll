@@ -77,9 +77,9 @@ export default function Navbar() {
 
           <div className="navbar-nav">
             <Link href="/" className={pathname === '/' ? 'active' : ''}>{t('nav.home')}</Link>
-            <Link href="/browse" className={pathname === '/browse' ? 'active' : ''}>{t('nav.browse')}</Link>
-            <Link href="/browse?type=ANIME" className={pathname.includes('anime') ? 'active' : ''}>{t('nav.anime')}</Link>
-            <Link href="/browse?type=MANGA" className={pathname.includes('manga') ? 'active' : ''}>{t('nav.manga')}</Link>
+            <Link href="/explorar" className={pathname === '/explorar' || pathname === '/browse' ? 'active' : ''}>{t('nav.browse')}</Link>
+            <Link href="/anime" className={pathname.includes('/anime') ? 'active' : ''}>{t('nav.anime')}</Link>
+            <Link href="/manga" className={pathname.includes('/manga') ? 'active' : ''}>{t('nav.manga')}</Link>
           </div>
 
           <form className="navbar-search" onSubmit={handleSearch}>
@@ -169,7 +169,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <form className="mobile-search" onSubmit={handleSearch}>
+          <form className="mobile-search" onSubmit={handleSearch}>
           <span className="search-icon">🔍</span>
           <input
             type="text"
@@ -179,17 +179,17 @@ export default function Navbar() {
           />
         </form>
 
-        <nav className="mobile-nav-links">
+          <nav className="mobile-nav-links">
           <Link href="/" className={pathname === '/' ? 'active' : ''} onClick={() => setMobileOpen(false)}>
             🏠 {t('nav.home')}
           </Link>
-          <Link href="/browse" className={pathname === '/browse' ? 'active' : ''} onClick={() => setMobileOpen(false)}>
+          <Link href="/explorar" className={pathname === '/explorar' || pathname === '/browse' ? 'active' : ''} onClick={() => setMobileOpen(false)}>
             🔍 {t('nav.browse')}
           </Link>
-          <Link href="/browse?type=ANIME" onClick={() => setMobileOpen(false)}>
+          <Link href="/anime" onClick={() => setMobileOpen(false)}>
             📺 {t('nav.anime')}
           </Link>
-          <Link href="/browse?type=MANGA" onClick={() => setMobileOpen(false)}>
+          <Link href="/manga" onClick={() => setMobileOpen(false)}>
             📖 {t('nav.manga')}
           </Link>
         </nav>
