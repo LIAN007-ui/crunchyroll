@@ -18,6 +18,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef(null);
+  const searchDebounce = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -54,10 +55,28 @@ export default function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
+      // keep the query in the input for UX (real-time search)
       setMobileOpen(false);
     }
   };
+
+  // Real-time search (debounced) — update browse results as user types
+  useEffect(() => {
+    if (searchDebounce.current) clearTimeout(searchDebounce.current);
+    searchDebounce.current = setTimeout(() => {
+      const q = (searchQuery || '').trim();
+      if (q.length > 0) {
+        // use replace to avoid polluting history while typing
+        router.replace(`/browse?search=${encodeURIComponent(q)}`);
+      } else {
+        // if input cleared, go back to browse without search
+        if (pathname === '/browse' || pathname.startsWith('/browse')) {
+          router.replace('/browse');
+        }
+      }
+    }, 450);
+    return () => clearTimeout(searchDebounce.current);
+  }, [searchQuery, router, pathname]);
 
   const handleLogout = () => {
     logout();
