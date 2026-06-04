@@ -6,11 +6,13 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTheme } from '@/context/ThemeContext';
 import './Navbar.css';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { lang, setLang, t } = useLanguage();
+  const { theme, toggle } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -124,6 +126,16 @@ export default function Navbar() {
               title={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
             >
               🌐 {lang.toUpperCase()}
+            </button>
+
+            <button
+              className="theme-toggle-btn navbar-desktop-only"
+              onClick={toggle}
+              aria-label="Toggle theme"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Cambiar a modo oscuro'}
+              style={{ marginLeft: 8 }}
+            >
+              {theme === 'dark' ? '🌙' : '☀️'}
             </button>
 
             {user ? (

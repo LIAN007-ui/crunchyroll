@@ -3,6 +3,7 @@
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NavigationProgress from '@/components/NavigationProgress';
@@ -11,6 +12,7 @@ export default function ClientLayout({ children }) {
   return (
     <LanguageProvider>
       <AuthProvider>
+        <ThemeProvider>
         <ToastProvider>
           <NavigationProgress />
           <Navbar />
@@ -19,6 +21,7 @@ export default function ClientLayout({ children }) {
           </main>
           <Footer />
         </ToastProvider>
+        </ThemeProvider>
       </AuthProvider>
     </LanguageProvider>
   );

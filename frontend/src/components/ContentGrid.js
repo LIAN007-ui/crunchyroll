@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import Spinner from './Spinner';
 import ContentCard, { ContentCardSkeleton } from './ContentCard';
 import './ContentGrid.css';
 
@@ -19,9 +20,7 @@ export default function ContentGrid({ items = [], title, viewAllHref, loading, e
       )}
       <div className="content-grid">
         {loading ? (
-          Array.from({ length: 10 }).map((_, i) => (
-            <ContentCardSkeleton key={i} />
-          ))
+          <Spinner />
         ) : items.length > 0 ? (
           items.map((item, i) => (
             <ContentCard key={item.id} content={item} index={i} />

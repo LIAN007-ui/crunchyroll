@@ -87,6 +87,21 @@
   --duration-slow: 400ms;
 }
 
+/* Light theme overrides */
+:root[data-theme="light"] {
+  --bg-primary: #f6f7fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(6,6,11,0.03);
+  --bg-input: rgba(0,0,0,0.04);
+
+  --text-primary: #0b1220;
+  --text-secondary: #374151;
+  --text-tertiary: #6b7280;
+  --border-subtle: rgba(2,6,23,0.06);
+}
+
 /* ═══════════════════════════════════════════════════════
    Reset & Base
    ═══════════════════════════════════════════════════════ */

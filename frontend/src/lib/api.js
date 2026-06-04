@@ -343,16 +343,28 @@ class ApiClient {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = null;
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}`);
+        // Friendly messages for common statuses
+        const status = response.status;
+        if (status === 401) throw new Error('No autorizado. Por favor inicia sesión.');
+        if (status === 403) throw new Error('Acceso denegado. No tienes permisos.');
+        if (status === 404) throw new Error('Recurso no encontrado.');
+        if (status >= 500) throw new Error('Error del servidor. Intenta más tarde.');
+        throw new Error((data && data.error) || `HTTP ${status}`);
       }
 
       return data;
     } catch (error) {
-      if (error.message === 'Failed to fetch') {
-        throw new Error('Unable to connect to server. Please try again.');
+      // Map common network errors to friendly text
+      if (error.message === 'Failed to fetch' || error.message.includes('NetworkError') || error.message.includes('fetch')) {
+        throw new Error('No se pudo conectar con el servidor. Revisa tu conexión o intenta más tarde.');
       }
       throw error;
     }
