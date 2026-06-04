@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import './ContentCard.css';
 
 export default function ContentCard({ content, index = 0 }) {
+  const router = useRouter();
   const link = content.type === 'ANIME'
     ? `/anime/${content.id}`
     : `/manga/${content.id}`;
@@ -63,7 +65,27 @@ export default function ContentCard({ content, index = 0 }) {
         </div>
         <div className="content-card-genres">
           {(content.genres || []).slice(0, 3).map(genre => (
-            <span key={genre} className="badge badge-genre">{genre}</span>
+            <span
+              key={genre}
+              className="badge badge-genre"
+              role="link"
+              tabIndex={0}
+              onClick={(e) => {
+                // prevent the parent Link from triggering
+                e.stopPropagation();
+                e.preventDefault();
+                router.push(`/browse?genre=${encodeURIComponent(genre)}`);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  router.push(`/browse?genre=${encodeURIComponent(genre)}`);
+                }
+              }}
+            >
+              {genre}
+            </span>
           ))}
         </div>
       </div>
