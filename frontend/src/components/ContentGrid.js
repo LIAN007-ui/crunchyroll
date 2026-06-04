@@ -1,17 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 import ContentCard, { ContentCardSkeleton } from './ContentCard';
 import './ContentGrid.css';
 
 export default function ContentGrid({ items = [], title, viewAllHref, loading, emptyMessage }) {
+  const { t } = useLanguage();
   return (
     <section>
       {title && (
         <div className="content-grid-header">
           <h2>{title}</h2>
           {viewAllHref && (
-            <Link href={viewAllHref} className="view-all">View All →</Link>
+            <Link href={viewAllHref} className="view-all">{t('viewAll')}</Link>
           )}
         </div>
       )}

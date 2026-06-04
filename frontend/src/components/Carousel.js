@@ -3,9 +3,11 @@
 import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import ContentCard, { ContentCardSkeleton } from './ContentCard';
+import { useLanguage } from '@/context/LanguageContext';
 import './Carousel.css';
 
 export default function Carousel({ items = [], title, emoji, viewAllHref, loading }) {
+  const { t } = useLanguage();
   const trackRef = useRef(null);
 
   const scroll = (direction) => {
@@ -50,7 +52,7 @@ export default function Carousel({ items = [], title, emoji, viewAllHref, loadin
       <div className="carousel-header">
         <h2>{emoji && <span>{emoji}</span>} {title}</h2>
         {viewAllHref && (
-          <Link href={viewAllHref} className="view-all">View All →</Link>
+          <Link href={viewAllHref} className="view-all">{t('viewAll')}</Link>
         )}
       </div>
 

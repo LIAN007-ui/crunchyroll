@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import HeroBanner from '@/components/HeroBanner';
+import Link from 'next/link';
 import Carousel from '@/components/Carousel';
 import './home.css';
 
@@ -108,17 +109,17 @@ export default function HomePage() {
         {/* Genre Quick Links */}
         <section className="genre-section">
           <h2>📂 Browse by Genre</h2>
-          <div className="genre-grid">
+            <div className="genre-grid">
             {['Action', 'Romance', 'Fantasy', 'Sci-Fi', 'Comedy', 'Mystery',
               'Horror', 'Adventure', 'Drama', 'Slice of Life', 'Supernatural', 'Music'
             ].map(genre => (
-              <a
+              <Link
                 key={genre}
                 href={`/browse?genre=${encodeURIComponent(genre)}`}
                 className="genre-card"
               >
                 <span className="genre-name">{genre}</span>
-              </a>
+              </Link>
             ))}
           </div>
         </section>
