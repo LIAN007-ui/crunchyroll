@@ -415,3 +415,16 @@
     gap: var(--space-md);
   }
 }
+
+/* Safety: hide any accidental duplicate navbar rendered directly below the main one */
+.navbar + .navbar {
+  display: none;
+}
+
+/* Ensure mobile overlay/panel never display on desktop (prevent accidental duplicates) */
+@media (min-width: 769px) {
+  .mobile-panel,
+  .mobile-overlay {
+    display: none !important;
+  }
+}
