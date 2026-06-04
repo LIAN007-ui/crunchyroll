@@ -69,7 +69,7 @@ async function proxyAndCache(req, res, base) {
 
     res.status(r.status).set(headers).send(body);
   } catch (err) {
-    next(err);
+    throw err;
   }
 }
 

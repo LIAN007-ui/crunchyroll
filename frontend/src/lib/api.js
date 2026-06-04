@@ -36,6 +36,32 @@ async function fetchFromProxyJikan(params = {}) {
   return { content };
 }
 
+async function fetchFromProxyManga(params = {}) {
+  const url = new URL('/api/proxy/mangadex/manga', typeof window !== 'undefined' ? window.location.origin : '');
+  if (params.search) url.searchParams.set('title', params.search);
+  url.searchParams.set('limit', params.limit || 12);
+
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error('Proxy MangaDex fetch failed');
+  const json = await res.json();
+  const content = (json.data || []).map(entry => ({
+    id: `manga-${entry.id}`,
+    type: 'MANGA',
+    title: entry.attributes?.title?.en || Object.values(entry.attributes?.title || {})[0] || 'Manga',
+    coverUrl: `/images/sample-1.svg`,
+    bannerUrl: `/images/sample-banner-1.svg`,
+    description: entry.attributes?.description?.en || '',
+    rating: 0,
+    year: entry.attributes?.year || null,
+    chapterCount: 0,
+    status: (entry.attributes?.status || 'UNKNOWN').toUpperCase(),
+    genres: [],
+    inWatchlist: false,
+    bookmarkCount: 0
+  }));
+  return { content };
+}
+
 async function fetchFromProxyJikanById(id) {
   let mal = id;
   if (typeof id === 'string' && id.startsWith('anime-')) mal = id.split('-')[1];
@@ -434,7 +460,7 @@ class ApiClient {
       try {
         if (USE_PROXY) {
           if (params.type === 'ANIME') return await fetchFromProxyJikan(params);
-          if (params.type === 'MANGA') return await fetchFromMangaDex(params);
+          if (params.type === 'MANGA') return await fetchFromProxyManga(params);
           return await fetchFromProxyJikan(params);
         }
 
