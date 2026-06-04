@@ -1,4 +1,5 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const PROXY_BASE = API_BASE.replace(/\/$/, '') + '/proxy';
 
 import mockApi from './mockApi';
 // External public APIs fallbacks
@@ -8,7 +9,7 @@ const USE_PROXY = process.env.NEXT_PUBLIC_USE_PROXY === 'true';
 
 // When `USE_PROXY` is true, prefer calling the backend proxy at /api/proxy/... to avoid CORS
 async function fetchFromProxyJikan(params = {}) {
-  const url = new URL('/api/proxy/jikan/anime', typeof window !== 'undefined' ? window.location.origin : '');
+  const url = new URL(`${PROXY_BASE}/jikan/anime`);
   if (params.search) url.searchParams.set('q', params.search);
   if (params.sort === 'rating') url.searchParams.set('order_by', 'score');
   if (params.sort === 'newest') url.searchParams.set('order_by', 'aired');
@@ -37,7 +38,7 @@ async function fetchFromProxyJikan(params = {}) {
 }
 
 async function fetchFromProxyManga(params = {}) {
-  const url = new URL('/api/proxy/mangadex/manga', typeof window !== 'undefined' ? window.location.origin : '');
+  const url = new URL(`${PROXY_BASE}/mangadex/manga`);
   if (params.search) url.searchParams.set('title', params.search);
   url.searchParams.set('limit', params.limit || 12);
 
@@ -66,15 +67,15 @@ async function fetchFromProxyJikanById(id) {
   let mal = id;
   if (typeof id === 'string' && id.startsWith('anime-')) mal = id.split('-')[1];
   if (!mal) throw new Error('Invalid anime id');
-  const url = new URL(`/api/proxy/jikan/anime/${mal}`, typeof window !== 'undefined' ? window.location.origin : '');
-  const res = await fetch(url.toString());
+  const url = `${PROXY_BASE}/jikan/anime/${mal}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Proxy Jikan fetch failed');
   const json = await res.json();
   const item = json.data;
   // Try to fetch episodes via proxy
   let episodes = [];
   try {
-    const epRes = await fetch(new URL(`/api/proxy/jikan/anime/${mal}/episodes`, typeof window !== 'undefined' ? window.location.origin : '').toString());
+    const epRes = await fetch(`${PROXY_BASE}/jikan/anime/${mal}/episodes`);
     if (epRes.ok) {
       const epJson = await epRes.json();
       const epItems = epJson.data || [];
@@ -219,8 +220,7 @@ async function fetchFromProxyMangaById(id) {
   if (typeof id === 'string' && id.startsWith('manga-')) md = id.split('-')[1];
   if (!md) throw new Error('Invalid manga id');
 
-  const base = typeof window !== 'undefined' ? window.location.origin : '';
-  const url = new URL(`/api/proxy/mangadex/manga/${md}`, base).toString();
+  const url = `${PROXY_BASE}/mangadex/manga/${md}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error('Proxy MangaDex fetch failed');
   const json = await res.json();
@@ -229,10 +229,8 @@ async function fetchFromProxyMangaById(id) {
   // try to fetch chapters (feed)
   let chapters = [];
   try {
-    const feedUrl = new URL(`/api/proxy/mangadex/manga/${md}/feed`, base);
-    feedUrl.searchParams.set('translatedLanguage[]', 'en');
-    feedUrl.searchParams.set('limit', '500');
-    const feedRes = await fetch(feedUrl.toString());
+    const feedUrl = `${PROXY_BASE}/mangadex/manga/${md}/feed?translatedLanguage[]=en&limit=500`;
+    const feedRes = await fetch(feedUrl);
     if (feedRes.ok) {
       const feedJson = await feedRes.json();
       const entries = feedJson.data || [];
@@ -501,7 +499,7 @@ class ApiClient {
           if (typeof id === 'string' && id.startsWith('manga-')) {
             // Try proxy to MangaDex
             const mdId = id.split('-')[1];
-            const res = await fetch(`/api/proxy/mangadex/manga/${mdId}`);
+            const res = await fetch(`${PROXY_BASE}/mangadex/manga/${mdId}`);
             if (res.ok) {
               const json = await res.json();
               return { content: {
